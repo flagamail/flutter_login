@@ -11,7 +11,7 @@ class RegisterLoginRequest {
     return result;
   }
 
-  Future saveUser(User user) async {
-    await con.saveUser(user);
+  Future<User> saveUser(User user) async {
+    return await con.saveUser(user);
   }
 }

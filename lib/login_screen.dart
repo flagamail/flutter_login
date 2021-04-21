@@ -1,22 +1,26 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:inerview_task/home.dart';
+import 'package:inerview_task/registration_screen.dart';
 
 import 'login_response.dart';
 import 'user.dart';
 
 class LoginPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => new _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> implements LoginCallBack {
+class _LoginPageState extends State<LoginPage>
+    implements RegisterLoginCallBack {
   bool _isLoading = false;
-  final formKey = new GlobalKey<FormState>();
-  final scaffoldKey = new GlobalKey<ScaffoldState>();
+  final formKey = GlobalKey<FormState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   String _email, _password;
-  LoginResponse _response;
+  RegisterLoginResponse _responseLogin;
 
   _LoginPageState() {
-    _response = new LoginResponse(this);
+    _responseLogin = RegisterLoginResponse(this);
   }
 
   void _submit() {
@@ -25,58 +29,79 @@ class _LoginPageState extends State<LoginPage> implements LoginCallBack {
       setState(() {
         _isLoading = true;
         form.save();
-        _response.doLogin(_email, _password);
+        _responseLogin.doLogin(_email, _password);
       });
     }
   }
 
   void _showSnackBar(String text) {
-    scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(text),
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(text),
     ));
   }
 
   @override
   Widget build(BuildContext context) {
-    var loginBtn = new RaisedButton(
-      onPressed: _submit,
-      child: new Text("Login"),
-      color: Colors.green,
+    var loginBtn = ElevatedButton(
+      onPressed: _isLoading ? null : _submit,
+      child: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Text("Login"),
     );
-    var loginForm = new Column(
+    var loginForm = Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        new Form(
+        Form(
           key: formKey,
-          child: new Column(
+          child: Column(
             children: <Widget>[
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: new TextFormField(
+                child: TextFormField(
                   onSaved: (val) => _email = val,
-                  decoration: new InputDecoration(labelText: "Email"),
+                  validator: (val) => EmailValidator.validate(val.trim())
+                      ? null
+                      : ""
+                          "Invalid Email",
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(labelText: "Email"),
                 ),
               ),
-              new Padding(
+              Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: new TextFormField(
+                child: TextFormField(
                   onSaved: (val) => _password = val,
-                  decoration: new InputDecoration(labelText: "Password"),
+                  validator: (val) => val.length >= 6
+                      ? null
+                      : "Minimum 6 "
+                          "characters",
+                  obscureText: true,
+                  keyboardType: TextInputType.visiblePassword,
+                  decoration: InputDecoration(labelText: "Password"),
                 ),
               )
             ],
           ),
         ),
-        loginBtn
+        loginBtn,
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => RegistrationPage()));
+          },
+          child: Text("Register"),
+        )
       ],
     );
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Login Page"),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Login Page"),
       ),
       key: scaffoldKey,
-      body: new Container(
-        child: new Center(
+      body: Container(
+        child: Center(
           child: loginForm,
         ),
       ),
@@ -84,19 +109,24 @@ class _LoginPageState extends State<LoginPage> implements LoginCallBack {
   }
 
   @override
-  void onLoginError(String error) {
-    _showSnackBar(error);
+  void onRegisterLoginError(String error) {
+    _showSnackBar("Login Failed, please retry or Register");
     setState(() {
       _isLoading = false;
     });
   }
 
   @override
-  void onLoginSuccess(User user) async {
+  void onRegisterLoginSuccess(User user) async {
     if (user != null) {
-      Navigator.of(context).pushNamed("/home");
-    } else {
       _showSnackBar("Login Success");
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => Dashboard(user)));
+    } else {
+      _showSnackBar("Login Failed, please retry");
       setState(() {
         _isLoading = false;
       });

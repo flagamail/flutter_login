@@ -7,10 +7,11 @@ class RegisterLoginCtr {
   DatabaseHelper con = new DatabaseHelper();
 
 //insertion
-  Future<int> saveUser(User user) async {
+  Future<User> saveUser(User user) async {
     var dbClient = await con.db;
-    int res = await dbClient.insert("User", user.toMap());
-    return res;
+    int intRowId = await dbClient.insert("User", user.toMap());
+    print('asdf user inserted $intRowId');
+    return getLogin(user.email, user.password);
   }
 
   //deletion
@@ -26,6 +27,7 @@ class RegisterLoginCtr {
         .rawQuery("SELECT * FROM user WHERE email = '$email' and password = '"
             "$password'");
 
+    print('asdf getLogin $res');
     if (res.length > 0) {
       return new User.fromMap(res.first);
     }

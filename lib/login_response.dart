@@ -1,22 +1,31 @@
 import 'login_request.dart';
 import 'user.dart';
 
-abstract class LoginCallBack {
-  void onLoginSuccess(User user);
+abstract class RegisterLoginCallBack {
+  void onRegisterLoginSuccess(User user);
 
-  void onLoginError(String error);
+  void onRegisterLoginError(String error);
 }
 
-class LoginResponse {
-  LoginCallBack _callBack;
+class RegisterLoginResponse {
+  RegisterLoginCallBack _callBack;
   RegisterLoginRequest loginRequest = new RegisterLoginRequest();
 
-  LoginResponse(this._callBack);
+  RegisterLoginResponse(this._callBack);
 
   doLogin(String email, String password) {
     loginRequest
         .getLogin(email, password)
-        .then((user) => _callBack.onLoginSuccess(user))
-        .catchError((onError) => _callBack.onLoginError(onError.toString()));
+        .then((user) => _callBack.onRegisterLoginSuccess(user))
+        .catchError(
+            (onError) => _callBack.onRegisterLoginError(onError.toString()));
+  }
+
+  doRegister(User user) {
+    loginRequest
+        .saveUser(user)
+        .then((user) => _callBack.onRegisterLoginSuccess(user))
+        .catchError(
+            (onError) => _callBack.onRegisterLoginError(onError.toString()));
   }
 }

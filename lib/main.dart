@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inerview_task/registration_screen.dart';
+import 'package:inerview_task/login_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: RegistrationPage(),
+      home: LoginPage(),
     );
   }
 }

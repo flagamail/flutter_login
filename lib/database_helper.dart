@@ -36,7 +36,20 @@ class DatabaseHelper {
     // Save copied asset to documents
     await new File(path).writeAsBytes(bytes);
     //}
-    var ourDb = await openDatabase(path);
-    return ourDb;
+    // open the database
+    Database database = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      // When creating the db, create the table
+      await db.execute('CREATE TABLE IF NOT EXISTS User ('
+          'first_name TEXT, '
+          ' last_name TEXT,  mobile TEXT, email TEXT,  password TEXT'
+          ')');
+      print('asdf onCreate Db');
+    }, onOpen: (database) async {
+      var res = await database.query("user");
+
+      print('asdf onOpen $res');
+    });
+    return database;
   }
 }
