@@ -29,7 +29,8 @@ class _RegistrationPageState extends State<RegistrationPage>
         _isLoading = true;
         form.save();
       });
-      User user = User(_email, _password, _firstName, _lastName, _mobile);
+      ModelUser user =
+          ModelUser(_email, _password, _firstName, _lastName, _mobile);
       await _responseRegister.doRegister(user);
     }
   }
@@ -144,7 +145,7 @@ class _RegistrationPageState extends State<RegistrationPage>
   }
 
   @override
-  void onRegisterLoginSuccess(User user) {
+  void onRegisterLoginSuccess(ModelUser user) {
     if (user != null) {
       _showSnackBar("Registration Success, Login");
       setState(() {

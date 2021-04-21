@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   @override
-  void onRegisterLoginSuccess(User user) async {
+  void onRegisterLoginSuccess(ModelUser user) async {
     if (user != null) {
       _showSnackBar("Login Success");
       setState(() {

@@ -2,7 +2,7 @@ import 'login_request.dart';
 import 'user.dart';
 
 abstract class RegisterLoginCallBack {
-  void onRegisterLoginSuccess(User user);
+  void onRegisterLoginSuccess(ModelUser user);
 
   void onRegisterLoginError(String error);
 }
@@ -21,7 +21,7 @@ class RegisterLoginResponse {
             (onError) => _callBack.onRegisterLoginError(onError.toString()));
   }
 
-  doRegister(User user) {
+  doRegister(ModelUser user) {
     loginRequest
         .saveUser(user)
         .then((user) => _callBack.onRegisterLoginSuccess(user))

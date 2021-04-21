@@ -4,15 +4,15 @@ const strFirstName = 'first_name';
 const strLastName = 'last_name';
 const strMobile = 'mobile';
 
-class User {
+class ModelUser {
   String _email;
   String _password;
   String _firstName, _lastName, _mobile;
 
-  User(this._email, this._password, this._firstName, this._lastName,
+  ModelUser(this._email, this._password, this._firstName, this._lastName,
       this._mobile);
 
-  User.fromMap(dynamic obj) {
+  ModelUser.fromMap(dynamic obj) {
     this._email = obj[strEmail];
     this._password = obj[strPassword];
     this._firstName = obj[strFirstName];

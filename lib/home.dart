@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inerview_task/user.dart';
 
 class Dashboard extends StatelessWidget {
-  final User user;
+  final ModelUser user;
 
   Dashboard(this.user);
 
